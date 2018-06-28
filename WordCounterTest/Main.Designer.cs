@@ -1,4 +1,4 @@
-﻿namespace WordCounterTest
+namespace WordCounterTest
 {
     partial class Main
     {
@@ -35,6 +35,11 @@
             this.cmdTest = new System.Windows.Forms.Button();
             this.lblTest = new System.Windows.Forms.Label();
             this.cmdClear = new System.Windows.Forms.Button();
+            this.cmdMultiTest = new System.Windows.Forms.Button();
+            this.lblThread1 = new System.Windows.Forms.Label();
+            this.lblThread2 = new System.Windows.Forms.Label();
+            this.lblThread3 = new System.Windows.Forms.Label();
+            this.lblThread4 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // lblKeywords
@@ -97,11 +102,62 @@
             this.cmdClear.UseVisualStyleBackColor = true;
             this.cmdClear.Click += new System.EventHandler(this.cmdClear_Click);
             // 
+            // cmdMultiTest
+            // 
+            this.cmdMultiTest.Location = new System.Drawing.Point(20, 270);
+            this.cmdMultiTest.Name = "cmdMultiTest";
+            this.cmdMultiTest.Size = new System.Drawing.Size(170, 70);
+            this.cmdMultiTest.TabIndex = 7;
+            this.cmdMultiTest.Text = "Multi-threaded Test";
+            this.cmdMultiTest.UseVisualStyleBackColor = true;
+            this.cmdMultiTest.Click += new System.EventHandler(this.cmdMultiTest_Click);
+            // 
+            // lblThread1
+            // 
+            this.lblThread1.AutoSize = true;
+            this.lblThread1.Location = new System.Drawing.Point(200, 250);
+            this.lblThread1.Name = "lblThread1";
+            this.lblThread1.Size = new System.Drawing.Size(163, 25);
+            this.lblThread1.TabIndex = 8;
+            this.lblThread1.Text = "Thread 1 result:";
+            // 
+            // lblThread2
+            // 
+            this.lblThread2.AutoSize = true;
+            this.lblThread2.Location = new System.Drawing.Point(200, 290);
+            this.lblThread2.Name = "lblThread2";
+            this.lblThread2.Size = new System.Drawing.Size(163, 25);
+            this.lblThread2.TabIndex = 9;
+            this.lblThread2.Text = "Thread 2 result:";
+            // 
+            // lblThread3
+            // 
+            this.lblThread3.AutoSize = true;
+            this.lblThread3.Location = new System.Drawing.Point(200, 330);
+            this.lblThread3.Name = "lblThread3";
+            this.lblThread3.Size = new System.Drawing.Size(163, 25);
+            this.lblThread3.TabIndex = 10;
+            this.lblThread3.Text = "Thread 3 result:";
+            // 
+            // lblThread4
+            // 
+            this.lblThread4.AutoSize = true;
+            this.lblThread4.Location = new System.Drawing.Point(200, 370);
+            this.lblThread4.Name = "lblThread4";
+            this.lblThread4.Size = new System.Drawing.Size(163, 25);
+            this.lblThread4.TabIndex = 11;
+            this.lblThread4.Text = "Thread 4 result:";
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.lblThread4);
+            this.Controls.Add(this.lblThread3);
+            this.Controls.Add(this.lblThread2);
+            this.Controls.Add(this.lblThread1);
+            this.Controls.Add(this.cmdMultiTest);
             this.Controls.Add(this.cmdClear);
             this.Controls.Add(this.lblTest);
             this.Controls.Add(this.cmdTest);
@@ -127,6 +183,10 @@
         private System.Windows.Forms.Button cmdTest;
         private System.Windows.Forms.Label lblTest;
         private System.Windows.Forms.Button cmdClear;
+        private System.Windows.Forms.Button cmdMultiTest;
+        private System.Windows.Forms.Label lblThread1;
+        private System.Windows.Forms.Label lblThread2;
+        private System.Windows.Forms.Label lblThread3;
+        private System.Windows.Forms.Label lblThread4;
     }
 }
-
