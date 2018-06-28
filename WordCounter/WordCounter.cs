@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -69,6 +69,7 @@ namespace WordCounter
 
         // The ConcurrentDictionary type supports multi-threaded operations.
         ConcurrentDictionary<string, URLInfo> _urlData = new ConcurrentDictionary<string, URLInfo>();
+        private Object lockObj = new Object();
 
         /// <summary>Gets the count of keyword occurrences in a local or web resource</summary>
         /// <param name="keywords">The collection of keywords in List format</param>
@@ -91,30 +92,33 @@ namespace WordCounter
                     return 0;
                 }
 
-                // Check if this URL + keywords combination is already in the cache.
-                URLInfo urlInfo;
-                if (_urlData.ContainsKey(url))
+                lock (lockObj)
                 {
-                    if (_urlData.TryGetValue(url, out urlInfo))
+                    // Check if this URL + keywords combination is already in the cache.
+                    URLInfo urlInfo;
+                    if (_urlData.ContainsKey(url))
                     {
-                        if (urlInfo.IsCurrent(keywords))
-                        {// The cache holds a recent (< 1 hour old) instance of this URL + keywords combination.
-                            return urlInfo.keywordCount;
+                        if (_urlData.TryGetValue(url, out urlInfo))
+                        {
+                            if (urlInfo.IsCurrent(keywords))
+                            {// The cache holds a recent (< 1 hour old) instance of this URL + keywords combination.
+                                return urlInfo.keywordCount;
+                            }
                         }
                     }
+
+                    // No recent or matching instance found in the cache, so conduct a new search.
+                    int count = 0;
+                    string file = (IsLocalPath(url) ? GetFileResourceContents(url) : GetWebResourceContents(url));
+                    string pattern = BuildRegexPatternFromList(keywords);
+
+                    count = GetRegexMatchCount(file, pattern);
+
+                    // The GetOrAdd method will add the new instance, unless another thread has just added it.
+                    urlInfo = _urlData.GetOrAdd(url, new URLInfo(count, DateTime.Now, keywords));
+
+                    return count;
                 }
-
-                // No recent or matching instance found in the cache, so conduct a new search.
-                int count = 0;
-                string file = (IsLocalPath(url) ? GetFileResourceContents(url) : GetWebResourceContents(url));
-                string pattern = BuildRegexPatternFromList(keywords);
-
-                count = GetRegexMatchCount(file, pattern);
-
-                // The GetOrAdd method will add the new instance, unless another thread has just added it.
-                urlInfo = _urlData.GetOrAdd(url, new URLInfo(count, DateTime.Now, keywords));
-
-                return count;
             }
             catch (Exception e)
             {

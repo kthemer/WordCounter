@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace WordCounterTest
@@ -31,7 +32,17 @@ namespace WordCounterTest
             txtKeywords.Clear();
             txtURL.Clear();
             lblTest.Text = "Enter a comma-delimited list (no spaces) of keywords and a valid URL, then click Test.";
+            ClearThreadLabels();
             txtKeywords.Focus();
+        }
+
+        /// <summary>Resets only the Thread labels</summary>
+        private void ClearThreadLabels()
+        {
+            lblThread1.Text = string.Empty;
+            lblThread2.Text = string.Empty;
+            lblThread3.Text = string.Empty;
+            lblThread4.Text = string.Empty;
         }
 
         /// <summary>Displays an error message in a MessageBox</summary>
@@ -65,7 +76,54 @@ namespace WordCounterTest
         {
             ClearForm();
         }
+
+        private void cmdMultiTest_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                List<string> keywords = GetKeywords();
+                string url = GetURL();
+
+                var multithread = WordCounterWithDelayAsync(keywords, url);
+            }
+            catch (Exception ex)
+            {
+                ShowError(ex.ToString());
+
+                ClearForm();
+            }
+        }
         #endregion ControlEvents
+
+        #region AsyncMethods
+        /// <summary>Creates four threads and makes the same WordCounter call with each</summary>
+        /// <param name="keywords">The list of keywords to search for in the URL</param>
+        /// <param name="url">A URL pointing to a local file resource or a web resource</param>
+        /// <returns>A Task</returns>
+        private async Task WordCounterWithDelayAsync(List<string> keywords, string url)
+        {   // Create four threads to make the same call.
+            // Add async delays to force the threads to work simultaneously.
+            ClearThreadLabels();
+
+            int count1 = _wordCounter.GetKeywordCount(keywords, url);
+            await Task.Delay(1000);
+
+            int count2 = _wordCounter.GetKeywordCount(keywords, url);
+            await Task.Delay(1000);
+
+            int count3 = _wordCounter.GetKeywordCount(keywords, url);
+            await Task.Delay(1000);
+
+            int count4 = _wordCounter.GetKeywordCount(keywords, url);
+            await Task.Delay(1000);
+
+            lblTest.Text = "Multi-threaded test results displayed below.";
+            lblThread1.Text = string.Format("Thread 1 result: {0} occurrences of the keywords found", count1.ToString());
+            lblThread2.Text = string.Format("Thread 2 result: {0} occurrences of the keywords found", count2.ToString());
+            lblThread3.Text = string.Format("Thread 3 result: {0} occurrences of the keywords found", count3.ToString());
+            lblThread4.Text = string.Format("Thread 4 result: {0} occurrences of the keywords found", count4.ToString());
+        }
+        #endregion AsyncMethods
 
         /// <summary>Gets the list of keywords entered into the keywords textbox</summary>
         /// <returns>A list of keywords in List format</returns>
